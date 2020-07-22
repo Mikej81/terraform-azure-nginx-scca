@@ -20,7 +20,7 @@ resource azurerm_public_ip lbpip {
   tags = var.tags
 }
 output http_url { value = "http://${azurerm_public_ip.lbpip.ip_address}" }
-output ssh_url { value = "ssh://${var.adminUserName}@${azurerm_public_ip.lbpip.ip_address}" }
+output ssh_url { value = "ssh ${var.adminUserName}@${azurerm_public_ip.lbpip.ip_address} -p 23" }
 
 # Create subnets
 resource azurerm_subnet missionownerext {

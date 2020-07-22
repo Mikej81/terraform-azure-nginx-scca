@@ -18,12 +18,6 @@ sudo mv /home/${admin_user}/proxy.conf /etc/nginx/conf.d/default.conf
 sudo nginx -s reload
 sudo systemctl restart nginx
 
-#  Wait for site to come up
-#until $(curl --output /dev/null --silent --head --fail http://${fqdn}); do
-#    printf 'measuring'
-#    sleep 5
-#done
-
 # Request Certificate before overwriting default only need to run once and then sync
  if [ "${active_device}" = "proxy01" ]; then    
     # Install CertBot Dependencies
@@ -56,11 +50,10 @@ sudo systemctl restart nginx
     else 
         #certbot lost!
         echo 'sad trombone: certbot'
-        sudo systemctl start nginx
     fi
  fi
 
-
+sudo systemctl start nginx
 
 if [ "${active_device}" = "proxy02" ]; then
         sudo systemctl stop nginx

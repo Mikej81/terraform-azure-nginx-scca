@@ -2,6 +2,8 @@
 
 Deploy NGINX OSS as a Reverse Proxy behind Azure LB to an NGINX App Server.
 
+![Diagram](./img/nginx_sca.png)
+
 All settings in variables.tf.
 
 ```bash

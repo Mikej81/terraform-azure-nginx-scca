@@ -1,33 +1,26 @@
 # Azure Environment
-variable projectPrefix { default = "missionowner" }
-variable adminUserName { default = "xadmin" }
-variable adminPassword { default = "2018F5Networks!!" }
-variable adminPubKey { default = "~/.ssh/id_rsa.pub" }
-variable location { default = "usgovvirginia" }
-variable region { default = "USGov Virginia" }
-variable owner { default = "michael@f5.com" }
-variable prefix {
-  default = "scca"
-}
-variable resourceGroup {
-    default = "scca-tf-rg"
-}
-variable securityGroup {
-  default = "none"
-}
-
-variable active_device {}
+variable projectPrefix {  }
+variable adminUserName {  }
+variable adminPassword {  }
+variable adminPubKey {  }
+variable location { }
+variable region {  }
+variable owner { }
+variable prefix { }
+variable resourceGroup { }
+variable securityGroup { }
+variable active_device { }
 variable missionownermgmt { }
 variable missionownerext { }
 variable missionownerint { }
 variable ssh_key {}
 variable storage_account {}
-variable managementPool {}
+#variable managementPool {}
 variable instanceType {}
 
-variable backendPool {
-  description = "azureLB resource pool"
-}
+#variable backendPool { }
+# variable proxy1_dns {}
+# variable proxy2_dns {}
 
 # NETWORK
 variable cidr { default = "10.100.0.0/16" }
@@ -40,7 +33,6 @@ variable subnets {
   }
 }
 
-variable pip_dns {}
 variable availabilitySet { }
 
 # mgmt private ips

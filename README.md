@@ -16,6 +16,5 @@ terraform apply -auto-approve
 
 * remove extra variables and collapse variables for each module
 * remove extraneous objects
-* get setup bash script finished for certbot and modsec
 * add more app servers
 * switch to UbuntuProFIPS in Azure

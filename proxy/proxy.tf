@@ -277,12 +277,13 @@ resource azurerm_linux_virtual_machine proxy01 {
     storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
-    version   = "latest"
-  }
+    source_image_reference {
+        publisher = "Canonical"
+        offer     = "UbuntuServer"
+        sku       = "16.04.0-LTS"
+        version   = "latest"
+    }
+
   admin_ssh_key {
     username   = var.adminUserName
     public_key = file("~/.ssh/id_rsa.pub")
@@ -328,12 +329,13 @@ resource azurerm_linux_virtual_machine proxy02 {
     storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
-    version   = "latest"
-  }
+    source_image_reference {
+        publisher = "Canonical"
+        offer     = "UbuntuServer"
+        sku       = "16.04.0-LTS"
+        version   = "latest"
+    }
+
   admin_ssh_key {
     username   = var.adminUserName
     public_key = file("~/.ssh/id_rsa.pub")

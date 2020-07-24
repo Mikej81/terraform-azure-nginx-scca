@@ -90,11 +90,28 @@ sudo sed -i 's/#modsecurity/modsecurity/' /etc/nginx/nginx.conf
 sudo sed -i 's/#modsecurity_rules_file/modsecurity_rules_file/' /etc/nginx/nginx.conf
 sudo sed -i 's/#load_module/load_module/' /etc/nginx/nginx.conf
 
-# cd ~
-# git clone https://github.com/coreruleset/coreruleset.git
-# sudo mv ~/coreruleset/rules/ /etc/nginx/modsec
-# sudo cp ~/coreruleset/crs-setup.conf.example /etc/nginx/modsec/crs-setup.conf
-# sudo cp /etc/nginx/modsec/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example /etc/nginx/modsec/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
-# sudo sed -i 's/#Include/Include/' /etc/nginx/modsec/main.conf
+git clone https://github.com/coreruleset/coreruleset.git
+sudo mv coreruleset/rules/ /etc/nginx/modsec/
+sudo cp coreruleset/crs-setup.conf.example /etc/nginx/modsec/crs-setup.conf
+sudo cp /etc/nginx/modsec/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example /etc/nginx/modsec/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+sudo sed -i 's/#Include/Include/' /etc/nginx/modsec/main.conf
 
 sudo systemctl restart nginx
+
+# SNORT
+# sudo mkdir -p /home/snort/snort_src
+# cd /home/snort/snort_src/
+# sudo wget https://snort.org/downloads/snort/daq-2.0.7.tar.gz                     
+# sudo wget https://snort.org/downloads/snort/snort-2.9.16.tar.gz
+# sudo tar xvzf daq-2.0.7.tar.gz
+# cd daq-2.0.7/
+# sudo autoreconf -f -i
+# sudo ./configure && sudo make && sudo make install
+# cd /home/snort/snort_src
+# sudo tar xvzf snort-2.9.16.tar.gz
+# cd snort-2.9.16
+# sudo ./configure --enable-sourcefire --disable-open-appid && sudo make && sudo make install
+# cd /home/snort/snort_src
+# sudo wget https://snort.org/downloads/community/community-rules.tar.gz -O community-rules.tar.gz
+# sudo tar -xvzf community-rules.tar.gz -C /etc/snort/rules
+

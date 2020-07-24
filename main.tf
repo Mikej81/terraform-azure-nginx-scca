@@ -49,11 +49,6 @@ module nginx_proxy {
   adminPassword    = var.adminPassword
   projectPrefix    = var.projectPrefix
   active_device    = var.active_device
-  #backendPool      = azurerm_lb_backend_address_pool.backend_pool
-  #managementPool   = azurerm_lb_backend_address_pool.backend_mgmt_pool
-  #pip_dns         = "${azurerm_public_ip.lbpip.domain_name_label}.${var.region_domain}"
-  #proxy1_dns      = "${azurerm_public_ip.proxy1pip.domain_name_label}.${var.region_domain}"
-  #proxy2_dns      = "${azurerm_public_ip.proxy2pip.domain_name_label}.${var.region_domain}"
   availabilitySet = azurerm_availability_set.avset
   storage_account = azurerm_storage_account.storageaccount.primary_blob_endpoint
   instanceType    = var.instanceType["proxy"]

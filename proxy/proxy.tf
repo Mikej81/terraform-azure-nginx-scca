@@ -78,18 +78,6 @@ resource azurerm_network_interface_security_group_association proxy02-mgmt-nsg {
   network_security_group_id = var.securityGroup.id
 }
 
-# resource azurerm_network_interface_backend_address_pool_association mpool_assc_proxy01 {
-#   network_interface_id    = azurerm_network_interface.proxy01-mgmt-nic.id
-#   ip_configuration_name   = "primary"
-#   backend_address_pool_id = var.managementPool.id
-# }
-
-# resource azurerm_network_interface_backend_address_pool_association mpool_assc_proxy02 {
-#   network_interface_id    = azurerm_network_interface.proxy02-mgmt-nic.id
-#   ip_configuration_name   = "primary"
-#   backend_address_pool_id = var.managementPool.id
-#}
-
 # Create the external network interface card
 resource azurerm_network_interface proxy01-ext-nic {
   name                          = "${var.prefix}-proxy01-ext-nic"
@@ -185,19 +173,6 @@ resource azurerm_network_interface_security_group_association proxy02-int-nsg {
   network_interface_id      = azurerm_network_interface.proxy02-int-nic.id
   network_security_group_id = var.securityGroup.id
 }
-
-# Associate the Network Interface to the BackendPool
-# resource azurerm_network_interface_backend_address_pool_association bpool_assc_proxy01 {
-#   network_interface_id    = azurerm_network_interface.proxy01-ext-nic.id
-#   ip_configuration_name   = "primary"
-#   backend_address_pool_id = var.backendPool.id
-# }
-
-# resource azurerm_network_interface_backend_address_pool_association bpool_assc_proxy02 {
-#   network_interface_id    = azurerm_network_interface.proxy02-ext-nic.id
-#   ip_configuration_name   = "primary"
-#   backend_address_pool_id = var.backendPool.id
-# }
 
 # set up proxy config
 
@@ -313,8 +288,6 @@ resource azurerm_linux_virtual_machine proxy01 {
     public_key = file("~/.ssh/id_rsa.pub")
   }
 
-  #custom_data = doesnt seem to work...
-
   tags = var.tags
 }
 
@@ -365,8 +338,6 @@ resource azurerm_linux_virtual_machine proxy02 {
     username   = var.adminUserName
     public_key = file("~/.ssh/id_rsa.pub")
   }
-
-  #custom_data = base64encode(data.template_file.startup_script02.rendered)  Doesnt seem to work... Left for reference
 
   tags = var.tags
 }

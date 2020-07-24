@@ -90,4 +90,11 @@ sudo sed -i 's/#modsecurity/modsecurity/' /etc/nginx/nginx.conf
 sudo sed -i 's/#modsecurity_rules_file/modsecurity_rules_file/' /etc/nginx/nginx.conf
 sudo sed -i 's/#load_module/load_module/' /etc/nginx/nginx.conf
 
+# cd ~
+# git clone https://github.com/coreruleset/coreruleset.git
+# sudo mv ~/coreruleset/rules/ /etc/nginx/modsec
+# sudo cp ~/coreruleset/crs-setup.conf.example /etc/nginx/modsec/crs-setup.conf
+# sudo cp /etc/nginx/modsec/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example /etc/nginx/modsec/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+# sudo sed -i 's/#Include/Include/' /etc/nginx/modsec/main.conf
+
 sudo systemctl restart nginx

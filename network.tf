@@ -8,20 +8,6 @@ resource azurerm_virtual_network main {
   tags = var.tags
 }
 
-# Create public IPs
-resource azurerm_public_ip lbpip {
-  name                = "${var.projectPrefix}-lb-pip"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Static"
-  domain_name_label   = "${var.projectPrefix}lbpip"
-  #sku                 = "Standard"
-
-  tags = var.tags
-}
-output http_url { value = "http://${azurerm_public_ip.lbpip.ip_address}" }
-output ssh_url { value = "ssh ${var.adminUserName}@${azurerm_public_ip.lbpip.ip_address} -p 23" }
-
 # Create subnets
 resource azurerm_subnet missionownerext {
   name                 = "missionowner_ext"
@@ -98,123 +84,17 @@ resource azurerm_network_security_group main {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+    security_rule {
+    name                       = "SSH2"
+    priority                   = 1004
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = chomp(data.http.myip.body)
+    destination_address_prefix = "*"
+  }
 
   tags = var.tags
-}
-
-# Create Azure LB
-resource azurerm_lb lb {
-  name                = "${var.projectPrefix}lb"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  #sku                 = "Standard"
-
-  frontend_ip_configuration {
-    name                 = "LoadBalancerFrontEnd"
-    public_ip_address_id = azurerm_public_ip.lbpip.id
-  }
-}
-
-resource azurerm_lb_backend_address_pool backend_pool {
-  name                = "BackendPool1"
-  resource_group_name = azurerm_resource_group.main.name
-  loadbalancer_id     = azurerm_lb.lb.id
-}
-
-resource azurerm_lb_backend_address_pool backend_mgmt_pool {
-  name                = "BackendMgmtPool1"
-  resource_group_name = azurerm_resource_group.main.name
-  loadbalancer_id     = azurerm_lb.lb.id
-}
-
-resource azurerm_lb_probe http_probe {
-  resource_group_name = azurerm_resource_group.main.name
-  loadbalancer_id     = azurerm_lb.lb.id
-  name                = "http_probe"
-  protocol            = "Http"
-  port                = 80
-  request_path        = "/health"
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-# resource azurerm_lb_probe https_probe {
-#   resource_group_name = azurerm_resource_group.main.name
-#   loadbalancer_id     = azurerm_lb.lb.id
-#   name                = "https_probe"
-#   protocol            = "Https"
-#   port                = 443
-#   request_path        = "/health"
-#   interval_in_seconds = 5
-#   number_of_probes    = 2
-# }
-
-resource azurerm_lb_probe tcp_probe {
-  resource_group_name = azurerm_resource_group.main.name
-  loadbalancer_id     = azurerm_lb.lb.id
-  name                = "tcp_probe"
-  protocol            = "Tcp"
-  port                = 23
-  interval_in_seconds = 5
-  number_of_probes    = 2
-}
-
-resource azurerm_lb_rule http_rule {
-  name                           = "HTTP_Rule"
-  resource_group_name            = azurerm_resource_group.main.name
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
-  enable_floating_ip             = false
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
-  idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.http_probe.id
-  depends_on                     = [azurerm_lb_probe.http_probe]
-}
-
-resource azurerm_lb_rule ssh_rule {
-  name                           = "SSH_Rule"
-  resource_group_name            = azurerm_resource_group.main.name
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
-  frontend_port                  = 23
-  backend_port                   = 23
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
-  enable_floating_ip             = false
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
-  idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.tcp_probe.id
-  depends_on                     = [azurerm_lb_probe.tcp_probe]
-}
-
-resource azurerm_lb_rule https_rule {
-  name                           = "HTTPS_Rule"
-  resource_group_name            = azurerm_resource_group.main.name
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
-  frontend_port                  = 443
-  backend_port                   = 443
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
-  enable_floating_ip             = false
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
-  idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.http_probe.id
-  depends_on                     = [azurerm_lb_probe.http_probe]
-}
-
-resource azurerm_lb_rule management_rule {
-  name                           = "management_Rule"
-  resource_group_name            = azurerm_resource_group.main.name
-  loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
-  frontend_port                  = 4443
-  backend_port                   = 4443
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
-  enable_floating_ip             = false
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_mgmt_pool.id
-  idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.tcp_probe.id
-  depends_on                     = [azurerm_lb_probe.tcp_probe]
 }

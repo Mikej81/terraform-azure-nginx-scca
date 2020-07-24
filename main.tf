@@ -3,7 +3,8 @@ resource tls_private_key ssh {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-# output "tls_private_key" { value = "${tls_private_key.example_ssh.private_key_pem}" }
+# output "tls_private_key" { value = "${tls_private_key.ssh.private_key_pem}" }
+# output "tls_private_key" { value = "${tls_private_key.ssh.public_key_openssh}" }
 
 # deploy nginx app server
 module nginx_app {
@@ -27,13 +28,13 @@ module nginx_app {
 
 # deploy nginx proxyies
 module nginx_proxy {
-  source        = "./proxy"
-  prefix        = var.projectPrefix
-  resourceGroup = azurerm_resource_group.main
-  #sshPublicKey = var.adminPubKey
+  source           = "./proxy"
+  prefix           = var.projectPrefix
+  resourceGroup    = azurerm_resource_group.main
+  adminPubKey      = var.adminPubKey
   ssh_key          = chomp(tls_private_key.ssh.public_key_openssh)
   region           = var.region
-  location      = var.location
+  location         = var.location
   missionownermgmt = azurerm_subnet.missionownermgmt
   missionownerext  = azurerm_subnet.missionownerext
   missionownerint  = azurerm_subnet.missionownerint
@@ -49,12 +50,19 @@ module nginx_proxy {
   adminPassword    = var.adminPassword
   projectPrefix    = var.projectPrefix
   active_device    = var.active_device
-  backendPool      = azurerm_lb_backend_address_pool.backend_pool
-  managementPool   = azurerm_lb_backend_address_pool.backend_mgmt_pool
-  #app_address = var.app01ext
-  pip_dns         = "${azurerm_public_ip.lbpip.domain_name_label}.${var.region_domain}"
   availabilitySet = azurerm_availability_set.avset
   storage_account = azurerm_storage_account.storageaccount.primary_blob_endpoint
-  instanceType = var.instanceType["proxy"]
-  tags         = var.tags
+  instanceType    = var.instanceType["proxy"]
+  owner           = var.owner
+  tags            = var.tags
+}
+
+output proxy1 {
+  value = module.nginx_proxy.proxy1_url
+}
+output proxy2 {
+  value = module.nginx_proxy.proxy2_url
+}
+output app_ssh {
+  value = module.nginx_proxy.app_ssh_url
 }

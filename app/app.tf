@@ -39,10 +39,17 @@ resource azurerm_linux_virtual_machine app01 {
     storage_account_type = "Premium_LRS"
   }
 
+  plan {
+    name = "pro-fips-16_04-private"
+    product = "0001-com-ubuntu-pro-xenial-fips"
+    publisher = "canonical"
+
+  }
+
   source_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    offer     = "0001-com-ubuntu-pro-xenial-fips"
+    sku       = "pro-fips-16_04-private"
     version   = "latest"
   }
 

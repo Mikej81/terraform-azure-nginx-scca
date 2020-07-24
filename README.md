@@ -1,6 +1,10 @@
 # terraform-azure-nginx-scca
 
-Deploy NGINX OSS as a Reverse Proxy behind Azure LB to an NGINX App Server.
+Deploys NGINX on UbuntuProFIPS in Azure as a Reverse Proxy with ModSecurity ([ModSecurity OWASP Core Rule Set](https://github.com/coreruleset/coreruleset)) and NGINX App Server.
+
+* ?testparam=test left in configs to verify.
+
+![Diagram](./img/nginx_sca.png)
 
 All settings in variables.tf.
 
@@ -14,6 +18,6 @@ terraform apply -auto-approve
 
 * remove extra variables and collapse variables for each module
 * remove extraneous objects
-* get setup bash script finished for certbot and modsec
 * add more app servers
-* switch to UbuntuProFIPS in Azure
+* containerize everything, everywhere
+* Testing Ubuntu PRO FIPS on Proxy devices, currently breaks compiling...
